@@ -46,11 +46,25 @@ class EventoController extends Controller
 
         Pergunta::create([
             'evento_id' => $evento->id,
+            'user_id'   => $request->user()->id,
             'texto'     => $request->input('texto'),
             'status'    => 'pendente',
         ]);
 
         return redirect()->route('eventos.show', $evento->id)
             ->with('sucesso', 'Sua pergunta foi enviada com sucesso!');
+    }
+
+    /**
+     * Exclui uma pergunta, somente se o usuário for o autor ou o dono do evento.
+     */
+    public function destroyPergunta($id, Pergunta $pergunta)
+    {
+        $this->authorize('delete', $pergunta);
+
+        $pergunta->delete();
+
+        return redirect()->route('eventos.show', $id)
+            ->with('sucesso', 'Pergunta excluída com sucesso!');
     }
 }

@@ -14,6 +14,7 @@ class EventoSeeder extends Seeder
     public function run(): void
     {
         $eventoPrincipal = Evento::create([
+            'user_id'     => 1, // dono do evento (UserSeeder)
             'titulo'      => 'Palestra Principal: O Futuro da Computação em Nuvem',
             'descricao'   => 'Evento corporativo de tecnologia com 500 participantes simultâneos.',
             'data_evento' => Carbon::now(),
