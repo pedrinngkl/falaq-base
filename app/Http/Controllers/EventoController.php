@@ -28,12 +28,19 @@ class EventoController extends Controller
         $evento = Evento::findOrFail($id);
 
         $perguntas = Pergunta::with('user')
+                             ->withCount('votos')
                              ->where('evento_id', $evento->id)
                              ->where('is_public', true)
+                             ->orderByDesc('votos_count')
                              ->latest()
                              ->paginate(10);
 
-        return view('eventos.show', compact('evento', 'perguntas'));
+        // IDs das perguntas já votadas pelo usuário logado (para destacar o botão)
+        $votadas = auth()->check()
+            ? auth()->user()->perguntasVotadas()->pluck('perguntas.id')->all()
+            : [];
+
+        return view('eventos.show', compact('evento', 'perguntas', 'votadas'));
     }
 
     /**

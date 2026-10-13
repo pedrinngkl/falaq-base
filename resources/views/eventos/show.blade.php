@@ -43,6 +43,18 @@
                         <span>Status: <span class="badge bg-success">{{ $pergunta->status }}</span></span>
                         <span>👤 {{ $pergunta->user->name ?? 'Anônimo' }} · {{ $pergunta->created_at->format('d/m/Y H:i') }}</span>
                     </div>
+                    <div class="d-flex align-items-center gap-2 mt-3">
+                        @php $jaVotou = in_array($pergunta->id, $votadas ?? []); @endphp
+                        <form action="{{ route('perguntas.votar', $pergunta) }}" method="POST" class="m-0">
+                            @csrf
+                            <button type="submit"
+                                    class="btn btn-sm fw-bold {{ $jaVotou ? 'btn-primary' : 'btn-outline-primary' }}"
+                                    title="{{ $jaVotou ? 'Clique para remover seu voto' : 'Clique para votar' }}">
+                                {{ $jaVotou ? '👍 Votado' : '👍 Upvote' }}
+                            </button>
+                        </form>
+                        <span class="badge bg-secondary fs-6">{{ $pergunta->votos_count }} {{ $pergunta->votos_count === 1 ? 'voto' : 'votos' }}</span>
+                    </div>
                     @can('delete', $pergunta)
                         <form action="{{ route('eventos.perguntas.destroy', [$evento->id, $pergunta->id]) }}" method="POST"
                               class="mt-3" onsubmit="return confirm('Excluir esta pergunta?')">
