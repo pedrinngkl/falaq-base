@@ -63,6 +63,14 @@
                             <x-danger-button>🗑 Excluir</x-danger-button>
                         </form>
                     @endcan
+                    @auth
+                        <form action="{{ route('perguntas.moderar', $pergunta) }}" method="POST" class="mt-3 d-flex gap-2">
+                            @csrf
+                            <input type="text" name="motivo" class="form-control form-control-sm bg-dark text-white border-secondary"
+                                   placeholder="Motivo da denúncia (mín. 10 caracteres)" required minlength="10" maxlength="255">
+                            <button type="submit" class="btn btn-sm btn-outline-warning text-nowrap">🚩 Denunciar</button>
+                        </form>
+                    @endauth
                 </div>
             </div>
         @empty
